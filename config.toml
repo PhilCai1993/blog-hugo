@@ -1,5 +1,5 @@
 # Site settings
-baseurl = "http://philcai1993.github.io/"
+baseurl = "https://nsobject.app"
 languageCode = "cn"
 title = "NSObject"
 theme = "hugo-theme-cactus-plus"
