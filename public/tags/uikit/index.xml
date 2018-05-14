@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>NSObject</title>
-    <link>http://philcai1993.github.io/</link>
-    <description>Recent content on NSObject</description>
+    <title>Uikit on NSObject</title>
+    <link>http://philcai1993.github.io/tags/uikit/</link>
+    <description>Recent content in Uikit on NSObject</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>cn</language>
     <lastBuildDate>Tue, 15 Mar 2016 12:00:28 +0800</lastBuildDate>
     
-	<atom:link href="http://philcai1993.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://philcai1993.github.io/tags/uikit/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -18,15 +18,6 @@
       
       <guid>http://philcai1993.github.io/posts/uikitdynamicsuiscrollview/</guid>
       <description>饿了么在上个版本的时候对餐厅页做了很大的改动, 无论是视觉上还是交互上都有很不错的效果. 为了实现这种效果, 我们自己用UIPanGestureR</description>
-    </item>
-    
-    <item>
-      <title>Debug CUICatalog Invalid Asset Name Supplied Null</title>
-      <link>http://philcai1993.github.io/posts/debug-cuicatalog-invalid-asset-name-supplied-null/</link>
-      <pubDate>Thu, 29 Oct 2015 16:30:59 +0800</pubDate>
-      
-      <guid>http://philcai1993.github.io/posts/debug-cuicatalog-invalid-asset-name-supplied-null/</guid>
-      <description>起因 今天看到了一个Xcode log出了一个错误 CUICatalog:Invalid asset name supplied: (null), Google了一下可能是+[UIImage imageNamed:]调用的时候, nam</description>
     </item>
     
   </channel>

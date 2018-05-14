@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="cn">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		 
+			
+  
+    <meta name="twitter:card" content="summary"/>
+    
+      <meta name="twitter:image" content="http://philcai1993.github.io/images/avatar.png" />
+    
+  
+  
+  <meta name="twitter:title" content="Debug CUICatalog Invalid Asset Name Supplied Null"/>
+  <meta name="twitter:description" content="起因 今天看到了一个Xcode log出了一个错误 CUICatalog:Invalid asset name supplied: (null), Google了一下可能是&#43;[UIImage imageNamed:]调用的时候, nam"/>
+  
+    <meta name="twitter:site" content="@PhilCai1993"/>
+  
+  
+  
+  
+    <meta name="twitter:creator" content="@PhilCai"/>
+  
+
+
+
+		
+		<meta name="author" content="PhilCai">
+		
+		<meta name="generator" content="Hugo 0.37" />
+		<title>Debug CUICatalog Invalid Asset Name Supplied Null &middot; NSObject</title>
+		<link rel="shortcut icon" href="http://philcai1993.github.io/images/favicon.ico">
+		<link rel="stylesheet" href="http://philcai1993.github.io/css/style.css">
+		<link rel="stylesheet" href="http://philcai1993.github.io/css/highlight.css">
+
+		
+		<link rel="stylesheet" href="http://philcai1993.github.io/css/font-awesome.min.css">
+		
+
+		
+		<link href="http://philcai1993.github.io/index.xml" rel="alternate" type="application/rss+xml" title="NSObject" />
+		
+
+		
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='http://philcai1993.github.io/'> <span class="arrow">←</span>Home</a>
+	
+	<a href='http://philcai1993.github.io/posts'>Archive</a>
+	<a href='http://philcai1993.github.io/tags'>Tags</a>
+	<a href='http://philcai1993.github.io/about'>About</a>
+
+	
+
+	
+	<a class="cta" href="http://philcai1993.github.io/index.xml">Subscribe</a>
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    <h1>
+                        Debug CUICatalog Invalid Asset Name Supplied Null
+                    </h1>
+                    <h2 class="headline">
+                    Oct 29, 2015 16:30
+                    · 607 words
+                    · 2 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="http://philcai1993.github.io/tags/ios">iOS</a>
+                          
+                              <a href="http://philcai1993.github.io/tags/xcode">Xcode</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                  
+                    <div id="toc">
+                      <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#起因">起因</a></li>
+<li><a href="#方法">方法</a></li>
+<li><a href="#解决方案">解决方案</a></li>
+<li><a href="#其他">其他</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+                    </div>
+                  
+                
+                <section id="post-body">
+                    
+
+<h3 id="起因">起因</h3>
+
+<p>今天看到了一个Xcode log出了一个错误 <code>CUICatalog:Invalid asset name supplied: (null)</code>, Google了一下可能是<code>+[UIImage imageNamed:]</code>调用的时候, name为nil. 虽然在运行的时候界面一切正常, 但是看到这个log还是想干掉它.</p>
+
+<h3 id="方法">方法</h3>
+
+<p>需要解决的问题是查找所有<code>+[UIImage imageNamed:]</code>调用的时候, 找到name是nil的地方, 但是整个项目一搜 &ldquo;imageNamed&rdquo; 显示 &ldquo;267 results in 117 files&rdquo;, 人工查找就算了吧.</p>
+
+<p>一开始想到的是用Method Swizzle来修改<code>+[UIImage imageNamed:]</code>的实现, 在name为nil的时候用断言, 查看调用栈. 但是想想写了debug之后还得删掉, 比较麻烦.</p>
+
+<p>于是机智的我想到了用<code>Symbolic Breakpoint</code>.</p>
+
+<h3 id="解决方案">解决方案</h3>
+
+<ol>
+<li>在Xcode的Breakpoint Navigator点击加号, 选择 <code>Add Symbolic Breakpoint</code>.</li>
+
+<li><p>右键选择Breakpoint选择 <code>Edit Breakpoint</code> , 在Symbol填入<code>+[UIImage imageNamed:]</code> , 在Condition填入 <code>[(NSString *)$arg3 length] == 0</code> 或者 <code>$arg3 == nil</code>. 可以自己尝试<code>po $arg1</code>,  <code>po $arg2</code>试试看.
+<img src="/img/Debug1.png" alt="Debug1" /></p></li>
+
+<li><p>运行程序, 直到程序进入断点. 打开Debug Navigator观察调用栈, 最顶部的一定是<code>+[UIImage imageNamed:]</code> , 点击调用栈下一条, 能够看到有调用到imageNamed的代码, 就是name为nil的地方.
+<img src="/img/Debug2.png" alt="Debug2" /></p></li>
+
+<li><p>Fix it.</p></li>
+</ol>
+
+<h3 id="其他">其他</h3>
+
+<p>会发现这个问题, 是由于今天看到了一个很好玩的函数 <code>instrumentObjcMessageSends()</code>. 它是用来监控Mac/iOS模拟器中Runtime message的方法.</p>
+
+<pre><code class="language-ObjC">#import &lt;objc/runtime.h&gt;
+//Declare
+void instrumentObjcMessageSends();
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  //Set NO to disable
+  instrumentObjcMessageSends(YES);
+}
+
+</code></pre>
+
+<p>具体用法可以自己Google.</p>
+
+                </section>
+            </article>
+
+            
+                <a class="twitter" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fphilcai1993.github.io%2fposts%2fdebug-cuicatalog-invalid-asset-name-supplied-null%2f - Debug%20CUICatalog%20Invalid%20Asset%20Name%20Supplied%20Null by @PhilCai1993"><span class="icon-twitter"> tweet</span></a>
+
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"> Share</span>
+</a>
+
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://www.github.com/PhilCai1993">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+    <a class="symbol" href="https://www.twitter.com/PhilCai1993">
+        <i class="fa fa-twitter-square"></i>
+    </a>
+    
+    <a class="symbol" href="https://weibo.com/u/2562752444">
+        <i class="fa fa-weibo"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+    
+       © Copyright 2018 <i class="fa fa-heart" aria-hidden="true"></i> PhilCai
+    
+    </p>
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="https://github.com/nodejh/hugo-theme-cactus-plus">nodejh</a>
+    </p>
+</footer>
+
+        </section>
+
+        <script src="http://philcai1993.github.io/js/jquery-3.3.1.min.js"></script>
+<script src="http://philcai1993.github.io/js/main.js"></script>
+<script src="http://philcai1993.github.io/js/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+  
+
+
+
+
+    </body>
+</html>

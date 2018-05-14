@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Xcode on NSObject</title>
+    <link>http://philcai1993.github.io/tags/xcode/</link>
+    <description>Recent content in Xcode on NSObject</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>cn</language>
+    <lastBuildDate>Thu, 29 Oct 2015 16:30:59 +0800</lastBuildDate>
+    
+	<atom:link href="http://philcai1993.github.io/tags/xcode/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Debug CUICatalog Invalid Asset Name Supplied Null</title>
+      <link>http://philcai1993.github.io/posts/debug-cuicatalog-invalid-asset-name-supplied-null/</link>
+      <pubDate>Thu, 29 Oct 2015 16:30:59 +0800</pubDate>
+      
+      <guid>http://philcai1993.github.io/posts/debug-cuicatalog-invalid-asset-name-supplied-null/</guid>
+      <description>起因 今天看到了一个Xcode log出了一个错误 CUICatalog:Invalid asset name supplied: (null), Google了一下可能是+[UIImage imageNamed:]调用的时候, nam</description>
+    </item>
+    
+  </channel>
+</rss>
