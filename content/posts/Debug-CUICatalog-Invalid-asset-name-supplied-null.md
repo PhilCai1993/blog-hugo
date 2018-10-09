@@ -7,7 +7,7 @@ tags = ["iOS", "Xcode"]
 
 ### 起因
 
-今天看到了一个Xcode log出了一个错误 `` CUICatalog:Invalid asset name supplied: (null) ``, Google了一下可能是``+[UIImage imageNamed:]``调用的时候, name为nil. 虽然在运行的时候界面一切正常, 但是看到这个log还是想干掉它.
+今天看到了一个Xcode Log出了一个错误 `` CUICatalog:Invalid asset name supplied: (null) ``, Google了一下可能是``+[UIImage imageNamed:]``调用的时候, name为nil. 虽然在运行的时候界面一切正常, 但是看到这个log还是想干掉它.
 
 ### 方法
 
